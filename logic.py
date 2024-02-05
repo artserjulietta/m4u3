@@ -16,16 +16,23 @@ class TaskManager:
             )""")
             conn.commit()
 
-    def add_task(self, user_id, name, description): #3
+    def add_task(self, user_id, name, description): 
         conn = sqlite3.connect(self.database)
         with conn:
             conn.execute("INSERT INTO tasks (name, description, user_id) VALUES (?, ?, ?)", (name, description, user_id))
             conn.commit()
 
-    def delete_task(self, task_name): #4
+    def delete_task(self, task_name, user_id): 
         conn = sqlite3.connect(self.database)
         with conn:
-            conn.execute("DELETE FROM tasks WHERE name = ?", (task_name,))
+            conn.execute("DELETE FROM tasks WHERE name = ? AND user_id = ?", (task_name, user_id))
             conn.commit()
-        
+
+    def show_task(self, user_id):
+        conn = sqlite3.connect(self.database)
+        with conn:
+            cur = conn.cursor()
+            cur.execute("SELECT name FROM tasks WHERE user_id = ?", (user_id,))
+            return cur.fetchall()
+            
 
